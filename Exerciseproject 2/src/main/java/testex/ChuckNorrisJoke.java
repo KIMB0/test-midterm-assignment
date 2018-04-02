@@ -6,6 +6,7 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class ChuckNorrisJoke implements IJokeFetcher {
 
+    //Here I override the method from IJokeFetcher. This is done in all joke-type classes.
     @Override
     public Joke getJoke(){
         try{

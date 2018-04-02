@@ -11,10 +11,7 @@ import testex.jokefetching.FetcherFactory;
 import testex.jokefetching.IJokeFetcher;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,26 +45,47 @@ public class JokeFetcherMock {
     FetcherFactory factory;
 
     @Before
-    void init() throws JokeException {
+    public void init() throws JokeException {
         MockitoAnnotations.initMocks(this);
 
-//        List<IJokeFetcher> fetchers = Arrays.asList(educationalProgrammingJoke, chuckNorrisJoke, yoMommaJoke, tambalJoke);
-//        when(factory.getJokeFetchers("eduprog,chucknorris,moma,tambal")).thenReturn(fetchers);
-//        List<String> types = Arrays.asList("EduJoke","ChuckNorris","Moma","Tambal");
-//        when(factory.getAvailableTypes()).thenReturn(types);
         jokeFetcher = new JokeFetcher(dateFormatter, factory);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2018, Calendar.MARCH, 29, 12, 41);
         testDate = calendar.getTime();
-        when(dateFormatter.getFormattedDateString(anyObject(), testDate)).thenReturn("29 Mar 2018 12:41 PM");
+
+        List<IJokeFetcher> jokes = new ArrayList<>();
+        jokes.add(chuckNorrisJoke);
+        jokes.add(yoMommaJoke);
+        jokes.add(tambalJoke);
+        jokes.add(educationalProgrammingJoke);
+
+        when(factory.getAvailableTypes()).thenReturn(Arrays.asList("eduprog", "chucknorris", "moma", "tambal"));
+//        when(factory.getJokeFetchers("eduprog,chucknorris,moma,tambal")).thenReturn(jokes);
+//        when(dateFormatter.getFormattedDateString(anyObject(), testDate)).thenReturn("29 Mar 2018 12:41 PM");
     }
 
     @Test
     public void testDateFormat() throws JokeException {
         Jokes jokes = jokeFetcher.getJokes("chucknorris,chucknorris", testDate, "Europe/Copenhagen");
 
+        System.out.println(testDate);
         verify(dateFormatter).getFormattedDateString("Europe/Copenhagen", testDate);
 
-        assertThat(jokes.getTimeZoneString(), is("dsf"));
+        assertThat(jokes.getTimeZoneString(), is("29 mar. 2018 12:41 PM"));
+    }
+
+    @Test
+    public void testFactoryCall() throws JokeException {
+        Jokes jokes = jokeFetcher.getJokes("chucknorris,chucknorris,moma", testDate, "Europe/Copenhagen");
+
+        verify(factory).getJokeFetchers("chucknorris,chucknorris,moma");
+
+        assertThat(jokes.getTimeZoneString(), is("29 mar. 2018 12:41 PM"));
+    }
+
+    @Test
+    public void testGetJokes() throws JokeException {
+        List<Joke> jokes = jokeFetcher.getJokes("chucknorris,moma,eduprog,tambal", testDate, "Europe/Copenhagen").getJokes();
+        assertThat(jokes, contains(chuckNorrisJoke, yoMommaJoke, educationalProgrammingJoke, tambalJoke));
     }
 }

@@ -45,7 +45,7 @@ public class JokeFetcher {
    */
   public boolean isStringValid(String jokeTokens){
     String[] tokens = jokeTokens.split(",");
-      for(String token: tokens){
+      for(String token : tokens){
       if(!availableTypes.contains(token)){
         return false;
       }
@@ -68,7 +68,7 @@ public class JokeFetcher {
       }
   }
 
-  public Jokes getJokes(String jokesToFetch,Date date, String timeZone) throws JokeException{
+  public Jokes getJokes(String jokesToFetch, Date date, String timeZone) throws JokeException{
       checkIfValidToken(jokesToFetch);
       Jokes jokes = new Jokes();
 

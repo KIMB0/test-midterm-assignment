@@ -32,18 +32,19 @@ public class DateFormatter implements IDateFormatter {
    * Execute to see available time format strings and responses to calling the single (non-main) public method
    */
   public static void main(String[] args) throws JokeException  {
-    
-//    for (String str : TimeZone.getAvailableIDs()) {
-//      System.out.println(str);
-//    }
+
+    //Here we get a list of all available IDs.
+    for (String str : TimeZone.getAvailableIDs()) {
+      System.out.println(str);
+    }
+
     DateFormatter dateFormatter = new DateFormatter();
     Date time = new Date();
+
     //Executing our public method with a valid String:
     System.out.println(dateFormatter.getFormattedDateString("Europe/Kiev", time));
     
-//    System.out.println(new DateFormatter().getFormattedDate("ImNotLegal"));
-    
-    
+    System.out.println(new DateFormatter().getFormattedDateString("ImNotLegal", time));
     
   }
 }
